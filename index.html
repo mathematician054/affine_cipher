@@ -57,7 +57,7 @@
   <label for="text">Teks:</label>
   <textarea id="text" rows="4">Halo Dunia!</textarea>
 
-  <label for="a">Kunci a (harus relatif prima dengan 26):</label>
+  <label for="a">Kunci a (relatif prima dengan 26):</label>
   <input type="number" id="a" value="5" />
 
   <label for="b">Kunci b:</label>
@@ -107,7 +107,7 @@
       langkahDiv.innerHTML = "";
 
       if (gcd(a, 26) !== 1) {
-        alert("❌ Nilai a harus relatif prima dengan 26. Gunakan: 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25.");
+        alert("❌ Nilai a harus relatif prima dengan 26. Contoh: 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25.");
         return;
       }
 
@@ -131,24 +131,26 @@
         const isUpper = char === char.toUpperCase();
         const base = isUpper ? 65 : 97;
         const index = char.charCodeAt(0) - base;
-        let shifted, newChar, stepText;
 
+        let hasilIndex, rumus, substitusi;
         if (encrypt) {
-          shifted = (a * index + b) % 26;
-          newChar = String.fromCharCode(base + shifted);
-          stepText = `${char} → ${index}; E(x) = (${a}×${index} + ${b}) mod 26 = ${shifted} → ${newChar}`;
+          hasilIndex = (a * index + b) % 26;
+          rumus = `E(x) = (a×x + b) mod 26`;
+          substitusi = `E(${index}) = (${a}×${index} + ${b}) mod 26 = ${hasilIndex}`;
         } else {
-          shifted = (a_inv * ((index - b + 26) % 26)) % 26;
-          newChar = String.fromCharCode(base + shifted);
-          stepText = `${char} → ${index}; D(x) = ${a_inv}×(${index} - ${b}) mod 26 = ${shifted} → ${newChar}`;
+          hasilIndex = (a_inv * ((index - b + 26) % 26)) % 26;
+          rumus = `D(x) = a⁻¹×(x - b) mod 26`;
+          substitusi = `D(${index}) = ${a_inv}×(${index} - ${b}) mod 26 = ${hasilIndex}`;
         }
+
+        const newChar = String.fromCharCode(base + hasilIndex);
+        const stepText = `${char} → ${index}; ${rumus}; ${substitusi} → ${newChar}`;
 
         hasil += newChar;
         langkahDiv.innerHTML += `<div class="step-line">${stepText}</div>`;
       }
 
       hasilDiv.textContent = hasil;
-      // Reset visualisasi tersembunyi setiap kali proses baru
       document.getElementById("langkah-container").style.display = "none";
       document.getElementById("toggleButton").textContent = "🔍 Tampilkan Visualisasi";
     }
